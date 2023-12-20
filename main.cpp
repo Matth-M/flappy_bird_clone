@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,6 +36,13 @@ int main(int argc, char *argv[]) {
   // Clear whole rendering target with previously selected color
   SDL_RenderClear(renderer);
   // Update screen
+  SDL_RenderPresent(renderer);
+
+  // Create player
+  SDL_Rect player = SDL_Rect{.x = 0, .y = 0, .w = 16, .h = 27};
+  // Red player
+  SDL_SetRenderDrawColor(renderer, 0xff, 0, 0, 0);
+  SDL_RenderFillRect(renderer, &player);
   SDL_RenderPresent(renderer);
 
   SDL_Event e;
