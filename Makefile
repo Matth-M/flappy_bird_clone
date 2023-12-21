@@ -17,6 +17,7 @@ $(EXEC): $(OBJ)
 .PHONY: clean 
 clean:
 	rm -f  $(EXEC) 
+	rm -f *.o
 
 .PHONY:run
 run: all
