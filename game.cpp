@@ -10,8 +10,10 @@ void handleEvents(GameState &state) {
     case SDL_QUIT:
       state.running = false;
       break;
-    case SDL_KEYUP:
-      state.spawnEnvironment = true;
+    case SDL_KEYDOWN:
+      if (e.key.keysym.sym == SDLK_w) {
+        state.jump = true;
+      }
       break;
     default:
       break;
