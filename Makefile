@@ -18,7 +18,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 .PHONY: clean 
 clean:
-	rm -f $(EXEC) $(OBJ)
+	rm -rf $(OBJ_DIR)
+
+$(OBJ): $(OBJ_DIR)
+
+$(OBJ_DIR):
+	mkdir $@
 
 .PHONY: run
 run: all
