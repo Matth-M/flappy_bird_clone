@@ -1,9 +1,11 @@
 COMPILER=g++
 CFLAGS=-Wall -g -Wextra
-SRC=$(wildcard *.cpp)
-OBJ=$(patsubst %.cpp,%.o,$(SRC))
+SRC_DIR=src
+OBJ_DIR=obj
+SRC=$(wildcard $(SRC_DIR)/*.cpp)
+OBJ=$(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 LINKER_FLAGS=SDL2
-EXEC=main
+EXEC=$(OBJ_DIR)/main
 
 .PHONY: all 
 all: $(EXEC)
@@ -11,14 +13,13 @@ all: $(EXEC)
 $(EXEC): $(OBJ)
 	$(COMPILER) $^ -l$(LINKER_FLAGS) -o $@ 
 
-%.o: %.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(COMPILER) $(CFLAGS) -c $^ -o $@
 
 .PHONY: clean 
 clean:
-	rm -f  $(EXEC) 
-	rm -f *.o
+	rm -f $(EXEC) $(OBJ)
 
-.PHONY:run
+.PHONY: run
 run: all
 	./$(EXEC)
