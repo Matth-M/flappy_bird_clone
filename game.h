@@ -5,3 +5,4 @@
 void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
                    Uint8 g, Uint8 b);
 void handleEvents(GameState &state);
+void gameLoop(GameState state, SDL_Renderer *renderer);
