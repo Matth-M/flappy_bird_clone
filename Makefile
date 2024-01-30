@@ -14,7 +14,7 @@ $(EXEC): $(OBJ)
 	$(COMPILER) $^ -l$(LINKER_FLAGS) -o $@ 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(COMPILER) $(CFLAGS) -c $^ -o $@
+	$(COMPILER) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean 
 clean:
