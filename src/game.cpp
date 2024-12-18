@@ -40,8 +40,11 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
     // Update screen
     SDL_RenderPresent(renderer);
     handleEvents(state);
-    drawRectangle(renderer, state.player.body, 0xff, 0, 0);
-    state.player.updatePos();
+
+    // Draw player
+    drawRectangle(renderer, state.player.body.body, 0xff, 0, 0);
+    state.player.body.updatePos();
+    state.player.body.updateAccel(0, GRAVITY);
 
     if (state.spawnEnvironment) {
       SDL_Rect env = SDL_Rect{
