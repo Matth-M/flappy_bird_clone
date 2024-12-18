@@ -5,9 +5,6 @@
 #include <chrono>
 #include <thread>
 
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
-
 void handleEvents(GameState &state) {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {

@@ -1,6 +1,5 @@
 #include "Player.h"
 #include <SDL2/SDL_rect.h>
-const float GRAVITY = 1;
 const float JUMP_STRENGTH = 15;
 
 Player::Player(SDL_Rect &rect) { this->body = rect; }
