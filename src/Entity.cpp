@@ -1,5 +1,4 @@
 #include "Entity.h"
-#include "game.h"
 #include <SDL2/SDL_rect.h>
 
 const float MAX_X_ACCEL = 15;
