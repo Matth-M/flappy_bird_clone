@@ -50,7 +50,8 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
       SDL_Rect env = SDL_Rect{
           .x = WINDOW_WIDTH / 2, .y = WINDOW_HEIGHT / 2, .w = 16, .h = 27};
       drawRectangle(renderer, env, 0xff, 0, 0x00);
-    } else if (state.jump) {
+    }
+    if (state.jump) {
       state.player.jump();
       state.jump = !state.jump;
     }
