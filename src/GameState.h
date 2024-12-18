@@ -7,7 +7,7 @@ public:
   bool spawnEnvironment;
   bool jump;
   Player &player;
-  GameState(bool state, bool spawn, Player &player, bool jump);
+  GameState(bool running, bool spawnEnvironment, Player &player, bool jump);
   GameState(GameState &&) = default;
   GameState(const GameState &) = default;
   GameState &operator=(GameState &&) = default;

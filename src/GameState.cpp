@@ -1,6 +1,6 @@
 #include "GameState.h"
 
-GameState::GameState(bool state, bool spawn, Player &player, bool jump)
-    : player(player), running(state), spawnEnvironment(spawn), jump(jump) {}
+GameState::GameState(bool running, bool spawnEnvironment, Player &player, bool jump)
+    : player(player), running(running), spawnEnvironment(spawnEnvironment), jump(jump) {}
 
 GameState::~GameState() {}
