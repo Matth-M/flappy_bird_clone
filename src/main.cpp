@@ -34,8 +34,9 @@ int main() {
   }
 
   // Create player
-  SDL_Rect player_body =
+  SDL_Rect player_hitbox =
       SDL_Rect{.x = 0, .y = WINDOW_HEIGHT / 2, .w = 16, .h = 27};
+  Entity player_body = Entity(player_hitbox, 0, 0);
   Player player = Player(player_body);
 
   GameState state = GameState(true, false, player, false);

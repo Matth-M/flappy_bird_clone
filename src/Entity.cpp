@@ -4,7 +4,8 @@
 const float MAX_X_ACCEL = 15;
 const float MAX_Y_ACCEL = 15;
 
-Entity::Entity(SDL_Rect &rect) { this->body = rect; }
+Entity::Entity(SDL_Rect &hitbox, float initial_vx, float initial_vy)
+    : vx(initial_vx), vy(initial_vy), hitbox(hitbox) {}
 
 Entity::~Entity() {}
 

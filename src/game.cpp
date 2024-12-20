@@ -42,7 +42,7 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
     handleEvents(state);
 
     // Draw player
-    drawRectangle(renderer, state.player.body.body, 0xff, 0, 0);
+    drawRectangle(renderer, state.player.body.hitbox, 0xff, 0, 0);
     state.player.body.updatePos();
     state.player.body.updateAccel(0, GRAVITY);
 
