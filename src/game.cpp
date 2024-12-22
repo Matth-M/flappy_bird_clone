@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstddef>
+#include <cstdlib>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -27,11 +28,66 @@ void handleEvents(GameState &state) {
   }
 }
 
+enum OBSTACLE_TYPE { Gate_High, Gate_Low, Falling, Rising, last };
+
 void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
                    Uint8 g, Uint8 b) {
   SDL_SetRenderDrawColor(renderer, r, g, b, 0);
   SDL_RenderFillRect(renderer, &rect);
   SDL_RenderPresent(renderer);
+}
+
+void spawn_obstacle(std::vector<Entity> &obstacles, int obstacle_speed) {
+  auto obstacle_type = static_cast<OBSTACLE_TYPE>(rand() % last);
+  const auto w = 15;
+  switch (obstacle_type) {
+  case OBSTACLE_TYPE::Rising: {
+    const auto h = 3*WINDOW_HEIGHT / 5;
+    SDL_Rect obstacle_hitbox =
+        SDL_Rect{.x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h, .w = w, .h = h};
+    Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
+    obstacles.push_back(obstacle);
+    break;
+  }
+  case OBSTACLE_TYPE::Falling: {
+    const auto h = 3 * WINDOW_HEIGHT / 5;
+    SDL_Rect obstacle_hitbox =
+        SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h};
+    Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
+    obstacles.push_back(obstacle);
+    break;
+  }
+  case OBSTACLE_TYPE::Gate_High: {
+    const auto h_top = WINDOW_HEIGHT / 4;
+    SDL_Rect obstacle_top_hitbox =
+        SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h_top};
+    Entity obstacle_top = Entity(obstacle_top_hitbox, obstacle_speed, 0);
+
+    const auto h_bot = WINDOW_HEIGHT / 2;
+    SDL_Rect obstacle_bot_hitbox = SDL_Rect{
+        .x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h_bot, .w = w, .h = h_bot};
+    Entity obstacle_bot = Entity(obstacle_bot_hitbox, obstacle_speed, 0);
+    obstacles.push_back(obstacle_top);
+    obstacles.push_back(obstacle_bot);
+    break;
+  }
+  case OBSTACLE_TYPE::Gate_Low: {
+    const auto h_top = WINDOW_HEIGHT / 2;
+    SDL_Rect obstacle_top_hitbox =
+        SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h_top};
+    Entity obstacle_top = Entity(obstacle_top_hitbox, obstacle_speed, 0);
+
+    const auto h_bot = WINDOW_HEIGHT / 4;
+    SDL_Rect obstacle_bot_hitbox = SDL_Rect{
+        .x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h_bot, .w = w, .h = h_bot};
+    Entity obstacle_bot = Entity(obstacle_bot_hitbox, obstacle_speed, 0);
+    obstacles.push_back(obstacle_top);
+    obstacles.push_back(obstacle_bot);
+    break;
+  }
+  default:
+    break;
+  }
 }
 
 void gameLoop(GameState state, SDL_Renderer *renderer) {
@@ -67,27 +123,14 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
       }
     }
 
-    // Spawn new obstable
-    if (cycle_iteration % 50 == 0) {
-      const auto w = 15;
-      const auto h = WINDOW_HEIGHT / 2;
-      SDL_Rect obstacle_hitbox =
-          SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h};
-      // Obstacles are moving towards the left
-      auto obstacle_speed = -10;
-      Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
-      obstacles.push_back(obstacle);
-    } else if (cycle_iteration % 75 == 0) {
-      const auto w = 15;
-      const auto h = WINDOW_HEIGHT / 2;
-      SDL_Rect obstacle_hitbox = SDL_Rect{
-          .x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h, .w = w, .h = h};
-      // Obstacles are moving towards the left
-      auto obstacle_speed = -10;
-      Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
-      obstacles.push_back(obstacle);
-    }
+    // Obstacles are moving towards the left
+    auto obstacle_speed = -10;
 
+    const auto obstacle_spacing = 25;
+    // Spawn new obstable
+    if (cycle_iteration % obstacle_spacing == 0) {
+      spawn_obstacle(obstacles, obstacle_speed);
+    }
     // Draw player
     drawRectangle(renderer, state.player.body.hitbox, 0, 0xff, 0);
     state.player.body.updatePos();
