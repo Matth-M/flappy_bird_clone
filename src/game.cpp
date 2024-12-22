@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 
+// Handle keyboard events
 void handleEvents(GameState &state) {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
@@ -34,12 +35,12 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
     // Pause the thread for a bit to make the game playable by humans
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
-    // Set color for next operation
+
+    // Background
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
-    // Clear whole rendering target with previously selected color
     SDL_RenderClear(renderer);
-    // Update screen
     SDL_RenderPresent(renderer);
+
     handleEvents(state);
 
     // Draw player
