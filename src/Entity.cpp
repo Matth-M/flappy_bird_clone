@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "game.h"
 #include <SDL2/SDL_rect.h>
 
 const float MAX_X_ACCEL = 15;
@@ -10,8 +11,25 @@ Entity::Entity(SDL_Rect &hitbox, float initial_vx, float initial_vy)
 Entity::~Entity() {}
 
 void Entity::updatePos() {
-  body.y += vy;
-  body.x += vx;
+  if (hitbox.y + vy >= WINDOW_HEIGHT - hitbox.h) {
+    // Hits the bottom of the window
+    hitbox.y = WINDOW_HEIGHT - hitbox.h;
+    vy = 0;
+  } else if (hitbox.y + vy <= 0) {
+    hitbox.y = 0;
+    vy = 0;
+  } else {
+    hitbox.y += vy;
+  }
+  if (hitbox.x + vx >= WINDOW_WIDTH) {
+    hitbox.x = WINDOW_WIDTH;
+    vx = 0;
+  } else if (hitbox.x + vx <= 0) {
+    hitbox.x = 0;
+    vx = 0;
+  } else {
+    hitbox.x += vx;
+  }
 }
 
 void Entity::updateAccel(float ax, float ay) {
