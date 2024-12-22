@@ -3,7 +3,7 @@
 #include <SDL2/SDL_render.h>
 #include <vector>
 
-const float GRAVITY = 1.25;
+const float GRAVITY = 1.45;
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 
