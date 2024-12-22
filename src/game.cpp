@@ -32,9 +32,10 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
   while (state.running) {
 
+    // Pause the thread for a bit to make the game playable by humans
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
     // Set color for next operation
-    SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0xff, 0xff);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
     // Clear whole rendering target with previously selected color
     SDL_RenderClear(renderer);
     // Update screen
