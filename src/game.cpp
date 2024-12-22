@@ -5,6 +5,8 @@
 #include <SDL2/SDL_render.h>
 #include <algorithm>
 #include <chrono>
+#include <cstddef>
+#include <iostream>
 #include <thread>
 #include <vector>
 
@@ -57,16 +59,29 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
                     obstacles.end());
 
     // Draw obstacles
-    for (auto it = begin(obstacles); it != end(obstacles); ++it) {
-      it->updatePos();
-      drawRectangle(renderer, it->hitbox, 0xff, 0, 0);
+    for (size_t i = 0; i < obstacles.size(); ++i) {
+      obstacles[i].updatePos();
+      drawRectangle(renderer, obstacles[i].hitbox, 0xff, 0, 0);
+      if (state.player.collides(obstacles[i])) {
+        state.end = true;
+      }
     }
 
+    // Spawn new obstable
     if (cycle_iteration % 50 == 0) {
-      const auto w = 5;
-      const auto h = WINDOW_HEIGHT / 4;
+      const auto w = 15;
+      const auto h = WINDOW_HEIGHT / 2;
       SDL_Rect obstacle_hitbox =
           SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h};
+      // Obstacles are moving towards the left
+      auto obstacle_speed = -10;
+      Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
+      obstacles.push_back(obstacle);
+    } else if (cycle_iteration % 75 == 0) {
+      const auto w = 15;
+      const auto h = WINDOW_HEIGHT / 2;
+      SDL_Rect obstacle_hitbox = SDL_Rect{
+          .x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h, .w = w, .h = h};
       // Obstacles are moving towards the left
       auto obstacle_speed = -10;
       Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
@@ -81,6 +96,11 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
     if (state.jump) {
       state.player.jump();
       state.jump = !state.jump;
+    }
+
+    if (state.end) {
+      std::cout << "You lost" << "\n";
+      break;
     }
     cycle_iteration++;
   }

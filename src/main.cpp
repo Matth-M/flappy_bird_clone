@@ -39,7 +39,7 @@ int main() {
   Entity player_body = Entity(player_hitbox, 0, 0);
   Player player = Player(player_body);
 
-  GameState state = GameState(true, false, player, false);
+  GameState state = GameState(true, false, player, false, false);
   gameLoop(state, renderer);
 
   SDL_DestroyRenderer(renderer);

@@ -11,6 +11,7 @@ public:
   ~Player();
   void jump();
   Entity body;
+	bool collides(const Entity& obstacle) const;
 
 private:
 };
