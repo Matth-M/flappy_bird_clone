@@ -94,6 +94,7 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
   uint64_t cycle_iteration = 0;
   std::vector<Entity> obstacles;
+  uint64_t distance_traveled = 0;
 
   while (state.running) {
 
@@ -125,6 +126,7 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
     // Obstacles are moving towards the left
     auto obstacle_speed = -10;
+    distance_traveled += abs(obstacle_speed);
 
     const auto obstacle_spacing = 25;
     // Spawn new obstable
@@ -143,6 +145,7 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
     if (state.end) {
       std::cout << "You lost" << "\n";
+      std::cout << "Distance traveled: " << distance_traveled << " pixels" << "\n";
       break;
     }
     cycle_iteration++;
