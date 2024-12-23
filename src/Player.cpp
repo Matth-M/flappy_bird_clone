@@ -1,10 +1,14 @@
 #include "Player.h"
 #include <iostream>
-const float JUMP_STRENGTH = 15;
+const float JUMP_STRENGTH = 11;
 Player::Player(Entity body) : body(body) {}
 
 Player::~Player() {}
-void Player::jump() { this->body.updateAccel(0, -JUMP_STRENGTH); }
+void Player::jump() {
+  if (body.vy > 0)
+    body.vy = -2;
+  body.updateAccel(0, -JUMP_STRENGTH);
+}
 
 bool Player::collides(const Entity &obstacle) const {
   const auto obstacle_x = obstacle.hitbox.x;
