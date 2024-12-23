@@ -28,7 +28,8 @@ void handleEvents(GameState &state) {
   }
 }
 
-enum OBSTACLE_TYPE { Gate_High, Gate_Low, Falling, Rising, last };
+// _ used for random genration
+enum OBSTACLE_TYPE { Gate_High, Gate_Low, Falling, Rising, _ };
 
 void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
                    Uint8 g, Uint8 b) {
@@ -38,11 +39,12 @@ void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
 }
 
 void spawn_obstacle(std::vector<Entity> &obstacles, int obstacle_speed) {
-  auto obstacle_type = static_cast<OBSTACLE_TYPE>(rand() % last);
+  // Generate an obstacle type randomly
+  auto obstacle_type = static_cast<OBSTACLE_TYPE>(rand() % OBSTACLE_TYPE::_);
   const auto w = 15;
   switch (obstacle_type) {
   case OBSTACLE_TYPE::Rising: {
-    const auto h = 3*WINDOW_HEIGHT / 5;
+    const auto h = 3 * WINDOW_HEIGHT / 5;
     SDL_Rect obstacle_hitbox =
         SDL_Rect{.x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h, .w = w, .h = h};
     Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
@@ -92,10 +94,15 @@ void spawn_obstacle(std::vector<Entity> &obstacles, int obstacle_speed) {
 
 void gameLoop(GameState state, SDL_Renderer *renderer) {
 
-  uint64_t cycle_iteration = 0;
   std::vector<Entity> obstacles;
-  uint64_t distance_traveled = 0;
+  // Spacing distance between 2 spawned objects
+  const auto obstacle_spacing = 300;
 
+  auto obstacle_speed = -8;
+  auto last_spawned_object_position = 0;
+  uint64_t distance_traveled = 0;
+	auto last_checkpoint_position = 0;
+	const auto checkpoint_spacing = WINDOW_WIDTH * 3;
   while (state.running) {
 
     // Pause the thread for a bit to make the game playable by humans
@@ -115,25 +122,31 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
                                    }),
                     obstacles.end());
 
-    // Draw obstacles
+    // Draw obstacles and update their speed
     for (size_t i = 0; i < obstacles.size(); ++i) {
       obstacles[i].updatePos();
+      obstacles[i].vx = obstacle_speed;
       drawRectangle(renderer, obstacles[i].hitbox, 0xff, 0, 0);
       if (state.player.collides(obstacles[i])) {
         state.end = true;
       }
     }
 
-    // Obstacles are moving towards the left
-    auto obstacle_speed = -10;
+    if ((distance_traveled - last_checkpoint_position) >= checkpoint_spacing ){
+      // Obstacles are moving towards the left
+      obstacle_speed -= 2;
+			last_checkpoint_position = distance_traveled;
+      std::cout << "Faster !" << "\n";
+    }
     distance_traveled += abs(obstacle_speed);
 
-    const auto obstacle_spacing = 25;
-    // Spawn new obstable
-    if (cycle_iteration % obstacle_spacing == 0) {
+    if ((distance_traveled - last_spawned_object_position) >=
+        obstacle_spacing) {
       spawn_obstacle(obstacles, obstacle_speed);
+      last_spawned_object_position = distance_traveled;
     }
-    // Draw player
+
+    // Draw player and update its position
     drawRectangle(renderer, state.player.body.hitbox, 0, 0xff, 0);
     state.player.body.updatePos();
     state.player.body.updateAccel(0, GRAVITY);
@@ -145,9 +158,9 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
     if (state.end) {
       std::cout << "You lost" << "\n";
-      std::cout << "Distance traveled: " << distance_traveled << " pixels" << "\n";
+      std::cout << "Distance traveled: " << distance_traveled << " pixels"
+                << "\n";
       break;
     }
-    cycle_iteration++;
   }
 }

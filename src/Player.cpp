@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <iostream>
 const float JUMP_STRENGTH = 11;
 Player::Player(Entity body) : body(body) {}
 
