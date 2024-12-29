@@ -19,9 +19,16 @@ void handleEvents(GameState &state) {
     case SDL_QUIT:
       state.running = false;
       break;
-    case SDL_KEYDOWN:
-      state.jump = true;
+    case SDL_KEYDOWN: {
+
+      if (e.key.keysym.sym == SDLK_ESCAPE) {
+        state.running = false;
+
+      } else {
+        state.jump = true;
+      }
       break;
+    }
     default:
       break;
     }
