@@ -101,8 +101,8 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
   auto obstacle_speed = -8;
   auto last_spawned_object_position = 0;
   uint64_t distance_traveled = 0;
-	auto last_checkpoint_position = 0;
-	const auto checkpoint_spacing = WINDOW_WIDTH * 3;
+  auto last_checkpoint_position = 0;
+  const auto checkpoint_spacing = WINDOW_WIDTH * 3;
   while (state.running) {
 
     // Pause the thread for a bit to make the game playable by humans
@@ -132,10 +132,10 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
       }
     }
 
-    if ((distance_traveled - last_checkpoint_position) >= checkpoint_spacing ){
+    if ((distance_traveled - last_checkpoint_position) >= checkpoint_spacing) {
       // Obstacles are moving towards the left
       obstacle_speed -= 2;
-			last_checkpoint_position = distance_traveled;
+      last_checkpoint_position = distance_traveled;
       std::cout << "Faster !" << "\n";
     }
     distance_traveled += abs(obstacle_speed);
