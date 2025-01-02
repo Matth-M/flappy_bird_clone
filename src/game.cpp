@@ -35,9 +35,6 @@ void handleEvents(GameState &state) {
   }
 }
 
-// _ used for random genration
-enum OBSTACLE_TYPE { Gate_High, Gate_Low, Falling, Rising, _ };
-
 void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
                    Uint8 g, Uint8 b) {
   SDL_SetRenderDrawColor(renderer, r, g, b, 0);

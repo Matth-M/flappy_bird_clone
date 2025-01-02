@@ -12,7 +12,7 @@
 GameState init_state() {
   // Create player
   SDL_Rect player_hitbox =
-      SDL_Rect{.x = 30, .y = WINDOW_HEIGHT / 2, .w = 15, .h = 30};
+      SDL_Rect{.x = PLAYER_STARTING_X, .y = WINDOW_HEIGHT / 2, .w = 15, .h = 30};
   Entity player_body = Entity(player_hitbox, 0, 0);
   Player player = Player(player_body);
 
