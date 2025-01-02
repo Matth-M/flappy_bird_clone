@@ -45,63 +45,8 @@ void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
   SDL_RenderPresent(renderer);
 }
 
-void spawn_obstacle(std::vector<Entity> &obstacles, int obstacle_speed) {
-  // Generate an obstacle type randomly
-  auto obstacle_type = static_cast<OBSTACLE_TYPE>(rand() % OBSTACLE_TYPE::_);
-  const auto w = 15;
-  switch (obstacle_type) {
-  case OBSTACLE_TYPE::Rising: {
-    const auto h = 3 * WINDOW_HEIGHT / 5;
-    SDL_Rect obstacle_hitbox =
-        SDL_Rect{.x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h, .w = w, .h = h};
-    Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
-    obstacles.push_back(obstacle);
-    break;
-  }
-  case OBSTACLE_TYPE::Falling: {
-    const auto h = 3 * WINDOW_HEIGHT / 5;
-    SDL_Rect obstacle_hitbox =
-        SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h};
-    Entity obstacle = Entity(obstacle_hitbox, obstacle_speed, 0);
-    obstacles.push_back(obstacle);
-    break;
-  }
-  case OBSTACLE_TYPE::Gate_High: {
-    const auto h_top = WINDOW_HEIGHT / 4;
-    SDL_Rect obstacle_top_hitbox =
-        SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h_top};
-    Entity obstacle_top = Entity(obstacle_top_hitbox, obstacle_speed, 0);
-
-    const auto h_bot = WINDOW_HEIGHT / 2;
-    SDL_Rect obstacle_bot_hitbox = SDL_Rect{
-        .x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h_bot, .w = w, .h = h_bot};
-    Entity obstacle_bot = Entity(obstacle_bot_hitbox, obstacle_speed, 0);
-    obstacles.push_back(obstacle_top);
-    obstacles.push_back(obstacle_bot);
-    break;
-  }
-  case OBSTACLE_TYPE::Gate_Low: {
-    const auto h_top = WINDOW_HEIGHT / 2;
-    SDL_Rect obstacle_top_hitbox =
-        SDL_Rect{.x = WINDOW_WIDTH - w, .y = 0, .w = w, .h = h_top};
-    Entity obstacle_top = Entity(obstacle_top_hitbox, obstacle_speed, 0);
-
-    const auto h_bot = WINDOW_HEIGHT / 4;
-    SDL_Rect obstacle_bot_hitbox = SDL_Rect{
-        .x = WINDOW_WIDTH - w, .y = WINDOW_HEIGHT - h_bot, .w = w, .h = h_bot};
-    Entity obstacle_bot = Entity(obstacle_bot_hitbox, obstacle_speed, 0);
-    obstacles.push_back(obstacle_top);
-    obstacles.push_back(obstacle_bot);
-    break;
-  }
-  default:
-    break;
-  }
-}
-
 void gameLoop(GameState state, SDL_Renderer *renderer) {
 
-  std::vector<Entity> obstacles;
   // Spacing distance between 2 spawned objects
   const auto obstacle_spacing = 300;
 
@@ -123,18 +68,18 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
     handleEvents(state);
 
     // Remove obstacles past the player
-    obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(),
+    state.obstacles.erase(std::remove_if(state.obstacles.begin(), state.obstacles.end(),
                                    [](const Entity &obstacle) {
                                      return obstacle.hitbox.x <= 0;
                                    }),
-                    obstacles.end());
+                    state.obstacles.end());
 
     // Draw obstacles and update their speed
-    for (size_t i = 0; i < obstacles.size(); ++i) {
-      obstacles[i].updatePos();
-      obstacles[i].vx = obstacle_speed;
-      drawRectangle(renderer, obstacles[i].hitbox, 0xff, 0, 0);
-      if (state.player.collides(obstacles[i])) {
+    for (size_t i = 0; i < state.obstacles.size(); ++i) {
+      state.obstacles[i].updatePos();
+      state.obstacles[i].vx = obstacle_speed;
+      drawRectangle(renderer, state.obstacles[i].hitbox, 0xff, 0, 0);
+      if (state.player.collides(state.obstacles[i])) {
         state.end = true;
       }
     }
@@ -149,7 +94,7 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
     if ((distance_traveled - last_spawned_object_position) >=
         obstacle_spacing) {
-      spawn_obstacle(obstacles, obstacle_speed);
+      state.spawn_obstacle(obstacle_speed);
       last_spawned_object_position = distance_traveled;
     }
 
