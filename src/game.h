@@ -7,6 +7,9 @@ const float GRAVITY = 1.45;
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const auto PLAYER_STARTING_X = 30;
+const auto INITIAL_OBSTACLE_SPEED = -8;
+// Spacing distance between 2 spawned objects
+const auto OBSTACLE_SPACING = 300;
 
 // _ used for random genration
 enum OBSTACLE_TYPE { Gate_High, Gate_Low, Falling, Rising, _ };
@@ -16,3 +19,4 @@ void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
 void handleEvents(GameState &state);
 void gameLoop(GameState state, SDL_Renderer *renderer);
 void spawn_obstacle(std::vector<Entity> &obstacles, int obstacle_speed);
+Player init_player();

@@ -44,13 +44,6 @@ void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
 
 void gameLoop(GameState state, SDL_Renderer *renderer) {
 
-  // Spacing distance between 2 spawned objects
-  const auto obstacle_spacing = 300;
-
-  auto obstacle_speed = -8;
-  auto last_spawned_object_position = 0;
-  uint64_t distance_traveled = 0;
-  auto last_checkpoint_position = 0;
   const auto checkpoint_spacing = WINDOW_WIDTH * 3;
   while (state.running) {
 
@@ -65,34 +58,36 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
     handleEvents(state);
 
     // Remove obstacles past the player
-    state.obstacles.erase(std::remove_if(state.obstacles.begin(), state.obstacles.end(),
-                                   [](const Entity &obstacle) {
-                                     return obstacle.hitbox.x <= 0;
-                                   }),
-                    state.obstacles.end());
+    state.obstacles.erase(std::remove_if(state.obstacles.begin(),
+                                         state.obstacles.end(),
+                                         [](const Entity &obstacle) {
+                                           return obstacle.hitbox.x <= 0;
+                                         }),
+                          state.obstacles.end());
 
     // Draw obstacles and update their speed
     for (size_t i = 0; i < state.obstacles.size(); ++i) {
       state.obstacles[i].updatePos();
-      state.obstacles[i].vx = obstacle_speed;
+      state.obstacles[i].vx = state.obstacle_speed;
       drawRectangle(renderer, state.obstacles[i].hitbox, 0xff, 0, 0);
       if (state.player.collides(state.obstacles[i])) {
         state.end = true;
       }
     }
 
-    if ((distance_traveled - last_checkpoint_position) >= checkpoint_spacing) {
+    if ((state.distance_traveled - state.last_checkpoint_position) >=
+        checkpoint_spacing) {
       // Obstacles are moving towards the left
-      obstacle_speed -= 2;
-      last_checkpoint_position = distance_traveled;
+      state.obstacle_speed -= 2;
+      state.last_checkpoint_position = state.distance_traveled;
       std::cout << "Faster !" << "\n";
     }
-    distance_traveled += abs(obstacle_speed);
+    state.distance_traveled += abs(state.obstacle_speed);
 
-    if ((distance_traveled - last_spawned_object_position) >=
-        obstacle_spacing) {
-      state.spawn_obstacle(obstacle_speed);
-      last_spawned_object_position = distance_traveled;
+    if ((state.distance_traveled - state.last_spawned_object_position) >=
+        OBSTACLE_SPACING) {
+      state.spawn_obstacle(state.obstacle_speed);
+      state.last_spawned_object_position = state.distance_traveled;
     }
 
     // Draw player and update its position
@@ -107,7 +102,7 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
 
     if (state.end) {
       std::cout << "You lost" << "\n";
-      std::cout << "Distance traveled: " << distance_traveled << " pixels"
+      std::cout << "Distance traveled: " << state.distance_traveled << " pixels"
                 << "\n";
       break;
     }

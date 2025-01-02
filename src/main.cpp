@@ -5,20 +5,8 @@
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
-#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
-GameState init_state() {
-  // Create player
-  SDL_Rect player_hitbox =
-      SDL_Rect{.x = PLAYER_STARTING_X, .y = WINDOW_HEIGHT / 2, .w = 15, .h = 30};
-  Entity player_body = Entity(player_hitbox, 0, 0);
-  Player player = Player(player_body);
-
-  GameState state = GameState(true, false, player, false, false);
-  return state;
-}
 
 int main() {
   // Initialize SDL
@@ -45,7 +33,7 @@ int main() {
     return 1;
   }
 
-  auto state = init_state();
+  auto state = GameState();
   gameLoop(state, renderer);
 
   SDL_DestroyRenderer(renderer);

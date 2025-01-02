@@ -1,12 +1,27 @@
 #include "GameState.h"
+#include "Player.h"
 #include "game.h"
-#include <iostream>
 
-GameState::GameState(bool running, bool spawnEnvironment, Player player,
-                     bool jump, bool end)
-    : running(running), spawnEnvironment(spawnEnvironment), jump(jump),
-      end(end), player(player) {
+Player init_player() {
+  // Create player
+  SDL_Rect player_hitbox = SDL_Rect{
+      .x = PLAYER_STARTING_X, .y = WINDOW_HEIGHT / 2, .w = 15, .h = 30};
+  Entity player_body = Entity(player_hitbox, 0, 0);
+  Player player = Player(player_body);
+  return player;
+}
+
+GameState::GameState() : player(init_player()) {
+  jump = false;
+  end = false;
+  distance_traveled = 0;
+  spawnEnvironment = 0;
+  obstacle_speed = INITIAL_OBSTACLE_SPEED;
+  running = true;
   obstacles = std::vector<Entity>();
+  last_spawned_object_position = 0;
+  last_checkpoint_position = 0;
+}
 }
 
 GameState::~GameState() {}
