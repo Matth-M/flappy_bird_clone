@@ -22,6 +22,7 @@ public:
   GameState &operator=(GameState &&) = default;
   GameState &operator=(const GameState &) = default;
   ~GameState();
+  void restart();
 
 private:
 };

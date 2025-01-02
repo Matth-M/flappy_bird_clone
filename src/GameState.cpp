@@ -22,6 +22,14 @@ GameState::GameState() : player(init_player()) {
   last_spawned_object_position = 0;
   last_checkpoint_position = 0;
 }
+
+void GameState::restart() {
+  obstacles.clear();
+  player.body.hitbox.x = PLAYER_STARTING_X;
+  distance_traveled = 0;
+  obstacle_speed = INITIAL_OBSTACLE_SPEED;
+  last_spawned_object_position = 0;
+  last_checkpoint_position = 0;
 }
 
 GameState::~GameState() {}

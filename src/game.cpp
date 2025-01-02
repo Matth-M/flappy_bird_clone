@@ -24,6 +24,9 @@ void handleEvents(GameState &state) {
       if (e.key.keysym.sym == SDLK_ESCAPE) {
         state.running = false;
 
+      } else if (e.key.keysym.sym == SDLK_r) {
+        std::cout << "restart" << std::endl;
+        state.restart();
       } else {
         state.jump = true;
       }
