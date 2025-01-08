@@ -20,3 +20,9 @@ cmake ..
 ```bash
 cmake --build ./build && ./build/bin/main # From project's root
 ```
+# TODO
+
+- Show score, speed on the screen
+- Make window resizable / playable in fullscreen
+- Use time based updates to vx and vy to be independent from framerate
+- Use `SDL_Texture` and `SDL_RenderCopy`
