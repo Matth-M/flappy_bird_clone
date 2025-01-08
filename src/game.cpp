@@ -41,7 +41,6 @@ void drawRectangle(SDL_Renderer *renderer, const SDL_Rect &rect, Uint8 r,
                    Uint8 g, Uint8 b) {
   SDL_SetRenderDrawColor(renderer, r, g, b, 0);
   SDL_RenderFillRect(renderer, &rect);
-  SDL_RenderPresent(renderer);
 }
 
 void gameLoop(GameState state, SDL_Renderer *renderer) {
@@ -55,7 +54,6 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
     // Background
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
 
     handleEvents(state);
 
@@ -108,5 +106,6 @@ void gameLoop(GameState state, SDL_Renderer *renderer) {
                 << "\n";
       break;
     }
+    SDL_RenderPresent(renderer);
   }
 }
